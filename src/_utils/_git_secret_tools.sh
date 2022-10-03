@@ -304,7 +304,7 @@ function _git_normalize_filename {
 
   local result
   result=$(git ls-files --full-name -o "$filename")
-  echo "$result"
+  echo "/$result"
 }
 
 
