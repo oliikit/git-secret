@@ -2,6 +2,18 @@
 
 ## {{Next Version}}
 
+### Misc
+
+- NOTE: Arch instructions now say to install from source. Arch tests removed temporarily (#916)
+- NOTE: there is an issue when repo directory (or a parent dir) contains a space (#135)
+- Improve error messaging when we cannot find git repo (#874)
+- Temporarily disable apk builds on alpine (#881)
+- Have `hide -v` show output from gnupg
+- Documentation updates and fixes
+
+
+## 0.5.0
+
 ### Features
 
 - Adds `SECRETS_GPG_ARMOR` env variable to use `gpg --armor`

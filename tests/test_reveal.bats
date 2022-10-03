@@ -46,14 +46,10 @@ function teardown {
 
 
 @test "run 'reveal' with bad arg" {
-  cp "$FILE_TO_HIDE" "${FILE_TO_HIDE}2"
-  rm -f "$FILE_TO_HIDE"
-
   local password=$(test_user_password "$TEST_DEFAULT_USER")
   run git secret reveal -Z -d "$TEST_GPG_HOMEDIR" -p "$password"
   [ "$status" -ne 0 ]
 }
-
 
 @test "run 'reveal' on secret version of file" {
   local password=$(test_user_password "$TEST_DEFAULT_USER")
@@ -291,6 +287,28 @@ function teardown {
     [ "$status" -eq 0 ]
   
     run git secret reveal -d "$TEST_GPG_HOMEDIR" -p "$password" new_filename.txt
+    [ "$status" -eq 0 ]
+  ) # end subshell
+
+  # clean up
+  rm -rf subdir
+}
+
+@test "run 'reveal' for all files from subdir" {
+  local password
+  password=$(test_user_password "$TEST_DEFAULT_USER")
+
+  mkdir -p subdir
+  echo "content2" > subdir/new_filename.txt
+
+  ( # start subshell for subdir tests
+    cd subdir
+    run git secret add new_filename.txt
+    [ "$status" -eq 0 ]
+    run git secret hide
+    [ "$status" -eq 0 ]
+  
+    run git secret reveal -d "$TEST_GPG_HOMEDIR" -p "$password"
     [ "$status" -eq 0 ]
   ) # end subshell
 

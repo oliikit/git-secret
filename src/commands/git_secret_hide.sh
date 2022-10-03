@@ -109,6 +109,7 @@ function hide {
 
   # If -c option was provided, clean the hidden files
   # before creating new ones.
+  # BUG: if passed files, we should only delete them, but we always delete all secret files; see issue #834
   if [[ $clean -eq 1 ]]; then
     _find_and_remove_secrets_formatted
   fi
@@ -157,6 +158,7 @@ function hide {
       if [[ "$update_only_modified" -eq 0 ]] ||
          [[ "$fsdb_file_hash" != "$file_hash" ]]; then
 
+        # we no longer use --no-permission-warning here, for #811
         local args=( --homedir "$secrets_dir_keys" --use-agent --yes '--trust-model=always' --encrypt )
 
         # SECRETS_GPG_ARMOR is expected to be empty or '1'.
@@ -168,7 +170,9 @@ function hide {
           args+=( '--armor' )
         fi
 
-        # we no longer use --no-permission-warning here in non-verbose mode, for #811
+        if [[ -n "$_SECRETS_VERBOSE" ]]; then
+          args+=( '--verbose' )
+        fi
 
         # we depend on $recipients being split on whitespace
         # shellcheck disable=SC2206
@@ -177,7 +181,7 @@ function hide {
         set +e  # disable 'set -e' so we can capture exit_code
 
      	  # For info about `3>&-` see:
-        # https://github.com/bats-core/bats-core#file-descriptor-3-read-this-if-bats-hangs
+        # https://github.com/bats-core/bats-core/blob/master/docs/source/writing-tests.md#file-descriptor-3-read-this-if-bats-hangs
         local gpg_output
         gpg_output=$($SECRETS_GPG_COMMAND "${args[@]}" 3>&-)  # we leave stderr alone
         local exit_code=$?
