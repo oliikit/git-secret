@@ -304,7 +304,14 @@ function _git_normalize_filename {
 
   local result
   result=$(git ls-files --full-name -o "$filename")
-  echo "/$result"
+
+  # if file is in the top level, append a / so only that 
+  # file is considered
+  if [[ $filename != *"/"* ]]; then
+    result="/$result"
+  fi
+
+  echo "$result"
 }
 
 
@@ -682,7 +689,7 @@ function _assert_keyring_emails {
 
 function _get_encrypted_filename {
   local filename
-  filename="$(dirname "$1")/$(basename "$1" "$SECRETS_EXTENSION")"
+  filename="$(basename "$1" "$SECRETS_EXTENSION")"
   echo "${filename}${SECRETS_EXTENSION}" | sed -e 's#^\./##'
 }
 
