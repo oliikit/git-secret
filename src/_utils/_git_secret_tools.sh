@@ -10,9 +10,9 @@ _SECRETS_DIR_PATHS="${_SECRETS_DIR}/paths"
 
 # Files:
 _SECRETS_DIR_KEYS_TRUSTDB="${_SECRETS_DIR_KEYS}/trustdb.gpg"
+_SECRETS_DIR_KEYS_AGE_FILE="${_SECRETS_DIR_KEYS}/receipents.txt"
 
 _SECRETS_DIR_PATHS_MAPPING="${_SECRETS_DIR_PATHS}/mapping.cfg"
-
 
 # shellcheck disable=SC2153
 if [[ -n "$SECRETS_VERBOSE" ]] && [[ "$SECRETS_VERBOSE" -ne 0 ]]; then
